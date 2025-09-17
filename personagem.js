@@ -1,22 +1,23 @@
 const tile_y_personagem_andando = 1;
 const max_animacao_andando = 8;
 const tile_size_personagem = 100;
-const tempo_para_trocar_animacao_personagem = 0.10; // em segundos
-const velocidade_movimento = 15; // pixels / segundo
+const frequencia_animacao_personagem = 20; // vezes por segundo
+const tempo_para_trocar_animacao_personagem = 1/frequencia_animacao_personagem; // em segundos
+const velocidade_movimento = 5; // grades / segundo
 
 var imagemPersonagem = new Image();
 imagemPersonagem.src = 'Soldier.png';
 
 var personagem = {
-    size: 100,
-    x: 100,
-    y: 100,
+    x: 0,
+    y: 0,
     animacao: 0,
     acumuladorAnimacao: 0,
-    movimento: {
+    velocidade: {
         x: 0,
         y: 0,
     },
+    grade: null,
 
     desenhar(canvas) {
         var ctx = canvas.getContext('2d');
@@ -29,26 +30,26 @@ var personagem = {
         var imagemWidth = tile_size_personagem;
         var imagemHeight = tile_size_personagem;
 
-        var canvasX = this.x;
-        var canvasY = this.y;
-        var canvasWidth = this.size;
-        var canvasHeight = this.size;
+        var canvasWidth = tile_size_personagem * this.grade.tamanho / 16;
+        var canvasHeight = tile_size_personagem * this.grade.tamanho / 16;
+        var canvasX = this.x - canvasWidth/2;
+        var canvasY = this.y - canvasHeight/2;
 
         ctx.drawImage(imagemPersonagem, imageX, imageY, imagemWidth, imagemHeight, canvasX, canvasY, canvasWidth, canvasHeight);
     },
 
     iniciarMovimento(evento) {
-        if (evento.key === 'ArrowUp') this.movimento.y = -velocidade_movimento;
-        if (evento.key === 'ArrowDown') this.movimento.y = +velocidade_movimento;
-        if (evento.key === 'ArrowLeft') this.movimento.x = -velocidade_movimento;
-        if (evento.key === 'ArrowRight') this.movimento.x = +velocidade_movimento;
+        if (evento.key === 'ArrowUp') this.velocidade.y = -velocidade_movimento * this.grade.tamanho;
+        if (evento.key === 'ArrowDown') this.velocidade.y = +velocidade_movimento * this.grade.tamanho;
+        if (evento.key === 'ArrowLeft') this.velocidade.x = -velocidade_movimento * this.grade.tamanho;
+        if (evento.key === 'ArrowRight') this.velocidade.x = +velocidade_movimento * this.grade.tamanho;
     },
 
     pararMovimento(evento) {
-        if (evento.key === 'ArrowUp') this.movimento.y = 0;
-        if (evento.key === 'ArrowDown') this.movimento.y = 0;
-        if (evento.key === 'ArrowLeft') this.movimento.x = 0;
-        if (evento.key === 'ArrowRight') this.movimento.x = 0;
+        if (evento.key === 'ArrowUp') this.velocidade.y = 0;
+        if (evento.key === 'ArrowDown') this.velocidade.y = 0;
+        if (evento.key === 'ArrowLeft') this.velocidade.x = 0;
+        if (evento.key === 'ArrowRight') this.velocidade.x = 0;
     },
 
     atualizar(tempoQuePassou) {
@@ -57,12 +58,29 @@ var personagem = {
     },
 
     mover(tempoQuePassou) {
-        this.x = this.x + this.movimento.x * tempoQuePassou;
-        this.y = this.y + this.movimento.y * tempoQuePassou;
-    },
+        this.x = this.x + this.velocidade.x * tempoQuePassou;
+        this.y = this.y + this.velocidade.y * tempoQuePassou;
+        
+        if (this.x < this.grade.minX) {
+            this.velocidade.x = 0;
+            this.x = this.grade.minX;
+        }
+        if (this.y < this.grade.minY) {
+            this.velocidade.y = 0;
+            this.y = this.grade.minY;
+        }
+        if (this.x > this.grade.maxX) {
+            this.velocidade.x = 0;
+            this.x = this.grade.maxX;
+        }
+        if (this.y > this.grade.maxY) {
+            this.velocidade.y = 0;
+            this.y = this.grade.maxY;
+        }
+    },  
 
     atualizarAnimacao(tempoQuePassou) {
-        if (this.movimento.x == 0 && this.movimento.y == 0) {
+        if (this.velocidade.x == 0 && this.velocidade.y == 0) {
             this.acumuladorAnimacao = tempo_para_trocar_animacao_personagem;
             this.animacao = 0;
             return;

@@ -1,10 +1,14 @@
 var canvas;
-const zoom = 3;
-const tamanhoGrade = 16;
+var grade = {
+    tamanho: 48,
+    maxX: null,
+    maxY: null,
+}
 
 function configurarEIniciar() {
     configurarCanvas();
     configurarEventos();
+    configurarGrade();
     executarLoop();
 };
 
@@ -17,6 +21,16 @@ function configurarCanvas() {
 function configurarEventos() {
     window.addEventListener('keydown', teclaApertada);
     window.addEventListener('keyup', teclaLevantada);
+}
+
+function configurarGrade() {
+    grade.minX = this.grade.tamanho/2;
+    grade.minY = this.grade.tamanho/2;
+    grade.maxX = canvas.width - this.grade.tamanho/2;
+    grade.maxY = canvas.height - this.grade.tamanho/2;
+
+    personagem.grade = grade;
+    chao.grade = grade;
 }
 
 
@@ -35,14 +49,12 @@ function executarLoop() {
 
 function desenhar() {
     reiniciarCanvas();
-    chao.desenhar(canvas, tamanhoGrade);
+    chao.desenhar(canvas);
     personagem.desenhar(canvas);
 }
 
 function reiniciarCanvas() {
     var ctx = canvas.getContext('2d');
-    ctx.reset();
-    ctx.scale(zoom, zoom);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
