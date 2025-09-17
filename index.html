@@ -10,15 +10,50 @@ html, body {
     padding: 0;
 }
 #meuCanvas {
-    display: block;
+    display: none;
     width: 100vw;
     height: 100vh;
     background-color: lightblue;
 }
+#mensagem-inicial {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: lightblue;
+    font-size: 2em;
+}
+#botao-comecar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: lightblue;
+    font-size: 1em;
+    margin: 20px;
+    background-color: white;
+    padding: 10px 15px;
+    border: 2px solid #333;
+    border-radius: 5px;
+    cursor: pointer;
+}
     </style>
 </head>
 <body>
+    <div id="mensagem-inicial">
+        <div>
+        <p>Bem-vindo, clique no botao para começar o jogo</p>
+        <button id="botao-comecar">começar</button>
+        </div>
+    </div>
     <canvas id="meuCanvas"></canvas>
+    <script>        
+        document.getElementById('botao-comecar').onclick = function() {
+            document.getElementById('mensagem-inicial').style.display = 'none';
+            document.getElementById('meuCanvas').style.display = 'block';
+            configurarEIniciar();
+    }
+    </script>
     <script src="chao.js"></script>
     <script src="personagem.js"></script>
     <script src="script.js"></script>

@@ -66,4 +66,3 @@ function teclaLevantada(evento) {
     personagem.pararMovimento(evento);
 }
 
-window.onload = configurarEIniciar;

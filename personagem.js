@@ -18,6 +18,7 @@ var personagem = {
         y: 0,
     },
     grade: null,
+    imagemInvertida: false,
 
     desenhar(canvas) {
         var ctx = canvas.getContext('2d');
@@ -35,14 +36,35 @@ var personagem = {
         var canvasX = this.x - canvasWidth/2;
         var canvasY = this.y - canvasHeight/2;
 
-        ctx.drawImage(imagemPersonagem, imageX, imageY, imagemWidth, imagemHeight, canvasX, canvasY, canvasWidth, canvasHeight);
-    },
+    if (this.imagemInvertida) {
+        
+        ctx.save();
+        ctx.translate(canvasX + canvasWidth / 2, canvasY + canvasHeight / 2);
+        ctx.scale(-1, 1);
+        ctx.drawImage(
+            imagemPersonagem, imageX, imageY, imagemWidth, imagemHeight,
+            -canvasWidth / 2, -canvasHeight / 2, canvasWidth, canvasHeight
+        );
+        ctx.restore();
+    } else {
+        ctx.drawImage(
+            imagemPersonagem,
+            imageX, imageY, imagemWidth, imagemHeight, canvasX, canvasY, canvasWidth, canvasHeight
+            );
+    }
+},
 
     iniciarMovimento(evento) {
         if (evento.key === 'ArrowUp') this.velocidade.y = -velocidade_movimento * this.grade.tamanho;
         if (evento.key === 'ArrowDown') this.velocidade.y = +velocidade_movimento * this.grade.tamanho;
-        if (evento.key === 'ArrowLeft') this.velocidade.x = -velocidade_movimento * this.grade.tamanho;
-        if (evento.key === 'ArrowRight') this.velocidade.x = +velocidade_movimento * this.grade.tamanho;
+        if (evento.key === 'ArrowLeft') {
+            this.velocidade.x = -velocidade_movimento * this.grade.tamanho;
+            this.imagemInvertida = true;
+        }
+        if (evento.key === 'ArrowRight') {
+            this.velocidade.x = +velocidade_movimento * this.grade.tamanho;
+            this.imagemInvertida = false;
+        }
     },
 
     pararMovimento(evento) {
