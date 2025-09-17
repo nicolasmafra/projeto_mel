@@ -8,7 +8,7 @@ var chao = {
 
     desenhar(canvas) {
         var tile_x = 0;
-        var tile_y = 15;
+        var tile_y = 2;
 
         var ctx = canvas.getContext('2d');
         
