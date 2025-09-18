@@ -30,9 +30,9 @@ function configurarGrade() {
     grade.maxY = canvas.height - this.grade.tamanho/2;
 
     personagem.grade = grade;
+    boss.grade = grade;
     chao.grade = grade;
 }
-
 
 var ultimaAtualizacao;
 function executarLoop() {
@@ -51,6 +51,7 @@ function desenhar() {
     reiniciarCanvas();
     chao.desenhar(canvas);
     personagem.desenhar(canvas);
+    boss.desenhar(canvas);
 }
 
 function reiniciarCanvas() {

@@ -11,6 +11,8 @@ imagemPersonagem.src = 'Soldier.png';
 var personagem = {
     x: 0,
     y: 0,
+    largura: 50,
+    altura: 50,
     animacao: 0,
     acumuladorAnimacao: 0,
     velocidade: {
@@ -50,7 +52,7 @@ var personagem = {
         ctx.drawImage(
             imagemPersonagem,
             imageX, imageY, imagemWidth, imagemHeight, canvasX, canvasY, canvasWidth, canvasHeight
-            );
+        );
     }
 },
 
@@ -78,7 +80,7 @@ var personagem = {
         this.mover(tempoQuePassou);
         this.atualizarAnimacao(tempoQuePassou);
     },
-
+    
     mover(tempoQuePassou) {
         this.x = this.x + this.velocidade.x * tempoQuePassou;
         this.y = this.y + this.velocidade.y * tempoQuePassou;
@@ -99,7 +101,7 @@ var personagem = {
             this.velocidade.y = 0;
             this.y = this.grade.maxY;
         }
-    },  
+    },
 
     atualizarAnimacao(tempoQuePassou) {
         if (this.velocidade.x == 0 && this.velocidade.y == 0) {
