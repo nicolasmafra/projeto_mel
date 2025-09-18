@@ -1,4 +1,5 @@
-const tile_size_boss = 75;
+const tile_width_boss = 79;
+const tile_height_boss = 69;
 
 var imagemBoss = new Image();
 imagemBoss.src = 'assets/boss.png';
@@ -17,10 +18,10 @@ var boss = {
         var tile_x = 0
         var tile_y = 0
 
-        var imageX = tile_x * tile_size_boss;
-        var imageY = tile_y * tile_size_boss;
-        var imagemWidth = tile_size_boss ;
-        var imagemHeight = tile_size_boss;
+        var imageX = tile_x * tile_width_boss;
+        var imageY = tile_y * tile_height_boss;
+        var imagemWidth = tile_width_boss ;
+        var imagemHeight = tile_height_boss;
 
         var escala = 2;
         var larguraDesenho = imagemWidth * escala;
@@ -32,8 +33,8 @@ var boss = {
             this.x, this.y, larguraDesenho, alturaDesenho // posição e tamanho no canvas
         );
 
-        var canvasWidth = tile_size_boss * this.grade.tamanho;
-        var canvasHeight = tile_size_boss * this.grade.tamanho;
+        var canvasWidth = tile_width_boss * this.grade.tamanho;
+        var canvasHeight = tile_height_boss * this.grade.tamanho;
         var canvasX = this.x - canvasWidth;
         var canvasY = this.y - canvasHeight;
     },

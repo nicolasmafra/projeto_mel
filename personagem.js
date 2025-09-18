@@ -1,6 +1,7 @@
 const tile_y_personagem_andando = 1;
 const max_animacao_andando = 8;
 const tile_size_personagem = 100;
+const tamanho_real_personagem = 16;
 const frequencia_animacao_personagem = 20; // vezes por segundo
 const tempo_para_trocar_animacao_personagem = 1/frequencia_animacao_personagem; // em segundos
 const velocidade_movimento = 5; // grades / segundo
@@ -33,8 +34,8 @@ var personagem = {
         var imagemWidth = tile_size_personagem;
         var imagemHeight = tile_size_personagem;
 
-        var canvasWidth = tile_size_personagem * this.grade.tamanho / 16;
-        var canvasHeight = tile_size_personagem * this.grade.tamanho / 16;
+        var canvasWidth = tile_size_personagem * (this.grade.tamanho / tamanho_real_personagem);
+        var canvasHeight = tile_size_personagem * (this.grade.tamanho / tamanho_real_personagem);
         var canvasX = this.x - canvasWidth/2;
         var canvasY = this.y - canvasHeight/2;
 
