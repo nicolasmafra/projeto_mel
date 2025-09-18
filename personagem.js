@@ -6,7 +6,7 @@ const tempo_para_trocar_animacao_personagem = 1/frequencia_animacao_personagem; 
 const velocidade_movimento = 5; // grades / segundo
 
 var imagemPersonagem = new Image();
-imagemPersonagem.src = 'Soldier.png';
+imagemPersonagem.src = 'assets/personagem.png';
 
 var personagem = {
     x: 0,

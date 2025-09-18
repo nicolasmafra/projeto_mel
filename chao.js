@@ -1,7 +1,7 @@
 const tile_size_chao = 16;
 
 var imagemChao = new Image();
-imagemChao.src = 'TX Tileset Grass.png'; // Coloque o caminho da sua imagem aqui
+imagemChao.src = 'assets/chao.png'; // Coloque o caminho da sua imagem aqui
 
 var chao = {
     grade: null,

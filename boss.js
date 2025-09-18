@@ -1,7 +1,7 @@
 const tile_size_boss = 75;
 
 var imagemBoss = new Image();
-imagemBoss.src = 'IDLE.png';
+imagemBoss.src = 'assets/boss.png';
 
 var boss = {
     x: 900,
