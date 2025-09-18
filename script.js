@@ -1,3 +1,4 @@
+const max_tempo = 0.5; // em segundos
 var canvas;
 var grade = {
     tamanho: 48,
@@ -38,14 +39,16 @@ var ultimaAtualizacao;
 function executarLoop() {
     var agora = Date.now();
     var tempoQuePassou = (ultimaAtualizacao ? (agora - ultimaAtualizacao) : 0) / 1000; // em segundos
-
+    if (tempoQuePassou > max_tempo) {
+        tempoQuePassou = max_tempo;
+    }
     personagem.atualizar(tempoQuePassou);
+    boss.atualizar(tempoQuePassou);
     desenhar();
 
     ultimaAtualizacao = agora;
     requestAnimationFrame(executarLoop); // chama de novo
 }
-
 
 function desenhar() {
     reiniciarCanvas();

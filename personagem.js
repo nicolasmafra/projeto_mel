@@ -106,6 +106,7 @@ var personagem = {
     },
 
     atualizarAnimacao(tempoQuePassou) {
+        // verifica se precisa parar animação
         if (this.velocidade.x == 0 && this.velocidade.y == 0) {
             this.acumuladorAnimacao = tempo_para_trocar_animacao_personagem;
             this.animacao = 0;
@@ -114,6 +115,7 @@ var personagem = {
 
         this.acumuladorAnimacao = this.acumuladorAnimacao + tempoQuePassou;
 
+        // verifica se deve reiniciar a animação
         if (this.acumuladorAnimacao > tempo_para_trocar_animacao_personagem) {
             // debita o tempo utilizado do acumulador
             this.acumuladorAnimacao = this.acumuladorAnimacao - tempo_para_trocar_animacao_personagem;
