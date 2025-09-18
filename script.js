@@ -50,8 +50,19 @@ function executarLoop() {
 function desenhar() {
     reiniciarCanvas();
     chao.desenhar(canvas);
-    personagem.desenhar(canvas);
-    boss.desenhar(canvas);
+
+    var coisas = [
+        personagem,
+        boss,
+    ];
+
+    coisas.sort(function(a,b) {
+        return a.y < b.y ? -1 : a.y > b.y ? 1 : 0;
+    });
+
+    coisas.forEach(coisa => {
+        coisa.desenhar(canvas);
+    })
 }
 
 function reiniciarCanvas() {

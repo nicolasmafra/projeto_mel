@@ -52,7 +52,8 @@ var personagem = {
     } else {
         ctx.drawImage(
             imagemPersonagem,
-            imageX, imageY, imagemWidth, imagemHeight, canvasX, canvasY, canvasWidth, canvasHeight
+            imageX, imageY, imagemWidth, imagemHeight,
+            canvasX, canvasY, canvasWidth, canvasHeight
         );
     }
 },
