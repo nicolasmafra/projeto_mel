@@ -1,8 +1,8 @@
 const tile_y_personagem_andando = 1;
 const max_animacao_andando = 8;
 const tile_size_personagem = 100;
-const tamanho_real_personagem = 16;
-const y_real_personagem = 55;
+const tamanho_real_personagem = 10;
+const y_real_personagem = 57;
 const frequencia_animacao_personagem = 20; // vezes por segundo
 const tempo_para_trocar_animacao_personagem = 1/frequencia_animacao_personagem; // em segundos
 const velocidade_movimento = 5; // grades / segundo
@@ -25,7 +25,7 @@ var personagem = {
     grade: null,
     imagemInvertida: false,
 
-    desenhar(canvas) {
+    desenhar(canvas, sombra=false) {
         var ctx = canvas.getContext('2d');
 
         var tile_x = this.animacao;
@@ -45,24 +45,33 @@ var personagem = {
         var canvasX = this.x - canvasWidth/2;
         var canvasY = this.y - canvasHeight/2 - diferencaY * correcaoEscala;
 
-    if (this.imagemInvertida) {
-        
-        ctx.save();
-        ctx.translate(canvasX + canvasWidth / 2, canvasY + canvasHeight / 2);
-        ctx.scale(-1, 1);
-        ctx.drawImage(
-            imagemPersonagem, imageX, imageY, imagemWidth, imagemHeight,
-            -canvasWidth / 2, -canvasHeight / 2, canvasWidth, canvasHeight
-        );
-        ctx.restore();
-    } else {
-        ctx.drawImage(
-            imagemPersonagem,
-            imageX, imageY, imagemWidth, imagemHeight,
-            canvasX, canvasY, canvasWidth, canvasHeight
-        );
-    }
-},
+        if (sombra) {
+            ctx.fillStyle = "#00000080";
+            ctx.beginPath();
+            ctx.ellipse(this.x, this.y, tamanhoEsperado/2, tamanhoEsperado/4, 0, 0, 2*Math.PI);
+            ctx.fill();
+        } else if (this.imagemInvertida) {
+            
+            ctx.save();
+            ctx.translate(canvasX + canvasWidth / 2, canvasY + canvasHeight / 2);
+            ctx.scale(-1, 1);
+            ctx.drawImage(
+                imagemPersonagem, imageX, imageY, imagemWidth, imagemHeight,
+                -canvasWidth / 2, -canvasHeight / 2, canvasWidth, canvasHeight
+            );
+            ctx.restore();
+        } else {
+            ctx.drawImage(
+                imagemPersonagem,
+                imageX, imageY, imagemWidth, imagemHeight,
+                canvasX, canvasY, canvasWidth, canvasHeight
+            );
+        }
+    },
+
+    desenharSombra(canvas) {
+        this.desenhar(canvas, true);
+    },
 
     iniciarMovimento(evento) {
         if (evento.key === 'ArrowUp') this.velocidade.y = -velocidade_movimento * this.grade.tamanho;

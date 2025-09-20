@@ -1,7 +1,7 @@
 const max_tempo = 0.5; // em segundos
 var canvas;
 var grade = {
-    tamanho: 48,
+    tamanho: 32,
     maxX: null,
     maxY: null,
 }

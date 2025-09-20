@@ -1,12 +1,14 @@
 const tile_width_boss = 79;
 const tile_height_boss = 69;
 const max_animacao_boss = 4;
-const tamanho_real_boss = 20; // tamanho que o corpo ocupa sem as asas, em pixels
-const grades_do_boss = 2;
-const x_real_boss = 30;
+const tamanho_real_boss = 25; // tamanho que o corpo ocupa sem as asas, em pixels
+const grades_do_boss = 3;
+const x_real_boss = 32;
 const y_real_boss_parado = 40;
 const frequencia_animacao_boss = 5;
-const tempo_para_trocar_animacao_boss = 1/frequencia_animacao_boss; 
+const tempo_para_trocar_animacao_boss = 1/frequencia_animacao_boss;
+const velocidade_maxima_boss = 200;
+const suavidade_boss = 0.08;
 
 var imagemBoss = new Image();
 imagemBoss.src = 'assets/boss.png';
@@ -14,10 +16,9 @@ imagemBoss.src = 'assets/boss.png';
 var boss = {
     x: 900,
     y: 400,
-    z: 3, // em grades
+    z: 5, // em grades
     acumuladorAnimacao: 0,
     animacao: 0,
-    velocidade: 2,
     grade: null,
 
     desenhar(canvas, sombra=false) {
@@ -61,12 +62,16 @@ var boss = {
 
     movendoBoss(tempoQuePassou) {
         var dx = personagem.x - this.x;
-        var dy = personagem.y - this.y;
+        var dy = personagem.y+1 - this.y;
         var distance = Math.sqrt(dx * dx + dy * dy);
 
         if (distance > 1) {
-            this.x += (dx / distance) * this.velocidade;
-            this.y += (dy / distance) * this.velocidade;
+            var velocidade = Math.sqrt(distance) / suavidade_boss;
+            if (velocidade > velocidade_maxima_boss) {
+                velocidade = velocidade_maxima_boss;
+            }
+            this.x += (dx / distance) * velocidade * tempoQuePassou;
+            this.y += (dy / distance) * velocidade * tempoQuePassou;
         }
     },
 
