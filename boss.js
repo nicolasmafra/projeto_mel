@@ -16,7 +16,7 @@ var boss = {
     z: 3, // em grades
     acumuladorAnimacao: 0,
     animacao: 0,
-    velocidade: 0,
+    velocidade: 2,
     grade: null,
 
     desenhar(canvas) {
@@ -47,8 +47,20 @@ var boss = {
         );
     },
 
+    movendoBoss(tempoQuePassou) {
+        var dx = personagem.x - this.x;
+        var dy = personagem.y - this.y;
+        var distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance > 1) {
+            this.x += (dx / distance) * this.velocidade;
+            this.y += (dy / distance) * this.velocidade;
+        }
+    },
+
     atualizar(tempoQuePassou) {
         this.atualizarAnimacao(tempoQuePassou);
+        this.movendoBoss(tempoQuePassou)
     },
 
     atualizarAnimacao(tempoQuePassou) {
