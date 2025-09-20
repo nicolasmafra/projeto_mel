@@ -64,6 +64,11 @@ function desenhar() {
     });
 
     coisas.forEach(coisa => {
+        if (coisa.desenharSombra) {
+            coisa.desenharSombra(canvas);
+        }
+    })
+    coisas.forEach(coisa => {
         coisa.desenhar(canvas);
     })
 }

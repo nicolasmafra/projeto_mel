@@ -2,16 +2,18 @@ const tile_y_personagem_andando = 1;
 const max_animacao_andando = 8;
 const tile_size_personagem = 100;
 const tamanho_real_personagem = 16;
+const y_real_personagem = 55;
 const frequencia_animacao_personagem = 20; // vezes por segundo
 const tempo_para_trocar_animacao_personagem = 1/frequencia_animacao_personagem; // em segundos
 const velocidade_movimento = 5; // grades / segundo
+const grades_do_personagem = 1;
 
 var imagemPersonagem = new Image();
 imagemPersonagem.src = 'assets/personagem.png';
 
 var personagem = {
-    x: 0,
-    y: 0,
+    x: 100,
+    y: 100,
     largura: 50,
     altura: 50,
     animacao: 0,
@@ -33,11 +35,15 @@ var personagem = {
         var imageY = tile_y * tile_size_personagem;
         var imagemWidth = tile_size_personagem;
         var imagemHeight = tile_size_personagem;
+        
+        var tamanhoEsperado = grades_do_personagem * this.grade.tamanho; // em pixels do canvas
+        var correcaoEscala = tamanhoEsperado / tamanho_real_personagem; // número adimensional
+        var diferencaY = y_real_personagem - tile_size_personagem/2; // em pixels da imagem
 
-        var canvasWidth = tile_size_personagem * (this.grade.tamanho / tamanho_real_personagem);
-        var canvasHeight = tile_size_personagem * (this.grade.tamanho / tamanho_real_personagem);
+        var canvasWidth = tile_size_personagem * correcaoEscala;
+        var canvasHeight = tile_size_personagem * correcaoEscala;
         var canvasX = this.x - canvasWidth/2;
-        var canvasY = this.y - canvasHeight/2;
+        var canvasY = this.y - canvasHeight/2 - diferencaY * correcaoEscala;
 
     if (this.imagemInvertida) {
         

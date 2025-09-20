@@ -20,7 +20,7 @@ var boss = {
     velocidade: 2,
     grade: null,
 
-    desenhar(canvas) {
+    desenhar(canvas, sombra=false) {
         var ctx = canvas.getContext('2d');
 
         var tile_x = this.animacao 
@@ -41,12 +41,22 @@ var boss = {
         var canvasX = this.x - canvasWidth/2 - diferencaX * correcaoEscala;
         var canvasY = this.y - canvasHeight/2 - diferencaY * correcaoEscala - this.z * this.grade.tamanho;
 
+        if (sombra) {
+            ctx.fillStyle = "#00000080";
+            ctx.beginPath();
+            ctx.ellipse(this.x, this.y, tamanhoEsperado/2, tamanhoEsperado/4, 0, 0, 2*Math.PI);
+            ctx.fill();
+        } else {
+            ctx.drawImage(
+                imagemBoss,
+                imageX, imageY, imagemWidth, imagemHeight,
+                canvasX, canvasY, canvasWidth, canvasHeight       
+            );
+        }
+    },
 
-        ctx.drawImage(
-            imagemBoss,
-            imageX, imageY, imagemWidth, imagemHeight,
-            canvasX, canvasY, canvasWidth, canvasHeight       
-        );
+    desenharSombra(canvas) {
+        this.desenhar(canvas, true);
     },
 
     movendoBoss(tempoQuePassou) {
