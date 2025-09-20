@@ -3,6 +3,7 @@ const tile_height_boss = 69;
 const max_animacao_boss = 4;
 const tamanho_real_boss = 20; // tamanho que o corpo ocupa sem as asas, em pixels
 const grades_do_boss = 2;
+const x_real_boss = 30;
 const y_real_boss_parado = 40;
 const frequencia_animacao_boss = 5;
 const tempo_para_trocar_animacao_boss = 1/frequencia_animacao_boss; 
@@ -32,11 +33,12 @@ var boss = {
 
         var tamanhoEsperado = grades_do_boss * this.grade.tamanho; // em pixels do canvas
         var correcaoEscala = tamanhoEsperado / tamanho_real_boss; // número adimensional
+        var diferencaX = x_real_boss - tile_width_boss/2; // em pixels da imagem
         var diferencaY = y_real_boss_parado - tile_height_boss/2; // em pixels da imagem
 
         var canvasWidth = tile_width_boss * correcaoEscala;
         var canvasHeight = tile_height_boss * correcaoEscala;
-        var canvasX = this.x - canvasWidth/2;
+        var canvasX = this.x - canvasWidth/2 - diferencaX * correcaoEscala;
         var canvasY = this.y - canvasHeight/2 - diferencaY * correcaoEscala - this.z * this.grade.tamanho;
 
 
