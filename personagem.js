@@ -87,10 +87,10 @@ var personagem = {
     },
 
     pararMovimento(evento) {
-        if (evento.key === 'ArrowUp') this.velocidade.y = 0;
-        if (evento.key === 'ArrowDown') this.velocidade.y = 0;
-        if (evento.key === 'ArrowLeft') this.velocidade.x = 0;
-        if (evento.key === 'ArrowRight') this.velocidade.x = 0;
+        if (evento.key === 'ArrowUp' && this.velocidade.y < 0) this.velocidade.y = 0;
+        if (evento.key === 'ArrowDown' && this.velocidade.y > 0) this.velocidade.y = 0;
+        if (evento.key === 'ArrowLeft' && this.velocidade.x < 0) this.velocidade.x = 0;
+        if (evento.key === 'ArrowRight' && this.velocidade.x > 0) this.velocidade.x = 0;
     },
 
     atualizar(tempoQuePassou) {
