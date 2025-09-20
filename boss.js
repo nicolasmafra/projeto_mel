@@ -60,7 +60,7 @@ var boss = {
         this.desenhar(canvas, true);
     },
 
-    movendoBoss(tempoQuePassou) {
+    aproximarBoss(tempoQuePassou) {
         var dx = personagem.x - this.x;
         var dy = personagem.y+1 - this.y;
         var distance = Math.sqrt(dx * dx + dy * dy);
@@ -77,7 +77,9 @@ var boss = {
 
     atualizar(tempoQuePassou) {
         this.atualizarAnimacao(tempoQuePassou);
-        this.movendoBoss(tempoQuePassou)
+
+        // A fazer: verificar se o boss está no modo de aproximar ou de atacar
+        this.aproximarBoss(tempoQuePassou);
     },
 
     atualizarAnimacao(tempoQuePassou) {
