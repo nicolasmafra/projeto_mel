@@ -59,7 +59,7 @@ function desenhar() {
         boss,
     ];
 
-    coisas.sort(function(a,b) {
+    coisas.sort(function(a,b) { //ordenar para variavel y 
         return a.y < b.y ? -1 : a.y > b.y ? 1 : 0;
     });
 
