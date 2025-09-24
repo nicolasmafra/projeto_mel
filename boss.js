@@ -121,6 +121,7 @@ var boss = {
         this.acumuladorAnimacao = this.acumuladorAnimacao + tempoQuePassou;
         var tempoParaTrocar;
         var maxAnimacao;
+        
         if (this.modo == "voando"){
             tempoParaTrocar = tempo_para_trocar_animacao_bossVoando;
             maxAnimacao = max_animacao_bossVoando;
