@@ -37,6 +37,7 @@ html, body {
     border-radius: 5px;
     cursor: pointer;
 }
+
     </style>
 </head>
 <body>
@@ -47,12 +48,16 @@ html, body {
         </div>
     </div>
     <canvas id="meuCanvas"></canvas>
+    <div class="barra_vida">
+        <div class="vida_atual" id="vida1"></div>
+    </div>
+
     <script>        
         document.getElementById('botao-comecar').onclick = function() {
             document.getElementById('mensagem-inicial').style.display = 'none';
             document.getElementById('meuCanvas').style.display = 'block';
             configurarEIniciar();
-    }
+        }
     </script>
     <script src="chao.js"></script>
     <script src="personagem.js"></script>

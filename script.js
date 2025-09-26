@@ -10,6 +10,8 @@ function configurarEIniciar() {
     configurarCanvas();
     configurarEventos();
     configurarGrade();
+    personagem.configurar(grade);
+    boss.configurar(grade);
     executarLoop();
 };
 
@@ -85,4 +87,15 @@ function teclaApertada(evento) {
 function teclaLevantada(evento) {
     personagem.pararMovimento(evento);
 }
+function colidiu(coisa1, coisa2) {
+    // pitágoras
+    var dx = coisa1.x - coisa2.x;
+    var dy = coisa1.y - coisa2.y;
+    var dz = coisa1.z - coisa2.z;
+    var quadradoHipotenusa = dx*dx + dy*dy + dz*dz;
 
+    var distancia = Math.sqrt(quadradoHipotenusa);
+    var distanciaMinima = coisa1.raio + coisa2.raio;
+
+    return distancia < distanciaMinima;
+}

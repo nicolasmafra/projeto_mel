@@ -1,7 +1,7 @@
 const max_animacao_andando = 8;
 const max_animacao_ataque1 = 6;
 const tile_size_personagem = 100;
-const tamanho_real_personagem = 10;
+const tamanho_real_personagem = 10; // tamanho em pixels dentro do tile
 const y_real_personagem = 57;
 const frequencia_animacao_personagem = 20; // vezes por segundo
 const tempo_para_trocar_animacao_personagem_andando = 1/frequencia_animacao_personagem; // em segundos
@@ -18,6 +18,7 @@ imagemPersonagemAtaque1.src = 'assets/personagemAtaque1.png';
 var personagem = {
     x: 100,
     y: 100,
+    z: 0,
     largura: 50,
     altura: 50,
     animacao: 0,
@@ -28,7 +29,19 @@ var personagem = {
     },
     grade: null,
     modo:"normal",
+    dano: 25,
+    vida: 100,
+    podeDarDano: true,
     imagemInvertida: false,
+    tamanho: null,
+    raio: null,
+    atacou: false,
+
+    configurar(grade) {
+        this.grade = grade;
+        this.tamanho = grades_do_personagem*this.grade.tamanho;
+        this.raio = this.tamanho /2;
+    },
 
     desenhar(canvas, sombra=false) {
         var ctx = canvas.getContext('2d');
@@ -41,8 +54,8 @@ var personagem = {
         var imagemWidth = tile_size_personagem;
         var imagemHeight = tile_size_personagem;
         
-        var tamanhoEsperado = grades_do_personagem * this.grade.tamanho; // em pixels do canvas
-        var correcaoEscala = tamanhoEsperado / tamanho_real_personagem; // número adimensional
+        var tamanho = grades_do_personagem * this.grade.tamanho; // em pixels do canvas
+        var correcaoEscala = this.tamanho / tamanho_real_personagem; // número adimensional
         var diferencaY = y_real_personagem - tile_size_personagem/2; // em pixels da imagem
 
         var canvasWidth = tile_size_personagem * correcaoEscala;
@@ -62,7 +75,7 @@ var personagem = {
         if (sombra) {
             ctx.fillStyle = "#00000080";
             ctx.beginPath();
-            ctx.ellipse(this.x, this.y, tamanhoEsperado/2, tamanhoEsperado/4, 0, 0, 2*Math.PI);
+            ctx.ellipse(this.x, this.y, this.tamanho/2, this.tamanho/4, 0, 0, 2*Math.PI);
             ctx.fill();
         } else if (this.imagemInvertida) {
             
@@ -100,9 +113,11 @@ var personagem = {
         }
         if(evento.key === 'f'){
             this.modo = "ataque1"
+            this.atacou = false
             this.acumuladorAnimacao = 0;
             this.animacao = 0;
         }
+    
     },
 
     pararMovimento(evento) {
@@ -115,6 +130,7 @@ var personagem = {
     atualizar(tempoQuePassou) {
         this.mover(tempoQuePassou);
         this.atualizarAnimacao(tempoQuePassou);
+        this.verificarAtaque();
     },
     
     mover(tempoQuePassou) {
@@ -142,7 +158,7 @@ var personagem = {
     atualizarAnimacao(tempoQuePassou) {
         var tempoParaTrocar;
         var maxAnimacao;
-        
+
         if (this.modo == "normal"){
             // verifica se precisa parar animação
             if (this.velocidade.x == 0 && this.velocidade.y == 0) {
@@ -177,5 +193,13 @@ var personagem = {
                 }
             }
         }
-    }
+    },
+
+    verificarAtaque() {
+        if(this.modo == "ataque1" && colidiu(personagem, boss) && ! this.atacou) {
+            this.atacou = true
+            console.log("atacou")
+        }
+    },
 };
+
