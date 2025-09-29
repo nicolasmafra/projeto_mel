@@ -1,5 +1,6 @@
 const max_tempo = 0.5; // em segundos
 var canvas;
+var textoLog;
 var grade = {
     tamanho: 32,
     maxX: null,
@@ -7,6 +8,7 @@ var grade = {
 }
 
 function configurarEIniciar() {
+    textoLog = document.getElementById("log");
     configurarCanvas();
     configurarEventos();
     configurarGrade();
@@ -83,6 +85,7 @@ function reiniciarCanvas() {
 }
 
 function botaoApertado(evento) {
+    textoLog.innerHTML = "Log: " + (evento.key || evento.constructor.name);
     personagem.iniciarMovimento(evento);
 }
 
