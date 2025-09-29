@@ -85,7 +85,6 @@ function reiniciarCanvas() {
 }
 
 function botaoApertado(evento) {
-    textoLog.innerHTML = "Log: " + (evento.key || evento.constructor.name);
     personagem.iniciarMovimento(evento);
 }
 
