@@ -198,7 +198,7 @@ var personagem = {
     verificarAtaque() {
         if(this.modo == "ataque1" && colidiu(personagem, boss) && ! this.atacou) {
             this.atacou = true
-            console.log("atacou")
+            boss.receberDano(30)
         }
     },
 };

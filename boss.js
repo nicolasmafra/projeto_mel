@@ -2,12 +2,14 @@ const tile_width_boss = 79;
 const tile_height_boss = 69;
 const max_animacao_bossVoando = 4;
 const max_animacao_bossAtacando = 8;
+const max_animacao_bossMorrendo = 7;
 const tamanho_real_boss = 25; // tamanho que o corpo ocupa sem as asas, em pixels
 const grades_do_boss = 3;
 const x_real_boss = 32;
 const y_real_boss_parado = 55;
 const tempo_para_trocar_animacao_bossVoando = 0.2;
 const tempo_para_trocar_animacao_bossAtacando = 0.2;
+const tempo_para_trocar_animacao_bossMorrendo = 0.2;
 const velocidade_maxima_boss = 200;
 const suavidade_boss = 0.08;
 const distance_maxima = 3; // em grades
@@ -20,6 +22,9 @@ imagemBossVoando.src = 'assets/bossVoando.png';
 
 const imagemBossAtaque = new Image();
 imagemBossAtaque.src = 'assets/bossAtaque.png';
+
+const imagemBossMorrendo = new Image();
+imagemBossMorrendo.src = 'assets/bossMorrendo.png';
 
 var boss = {
     x: 900,
@@ -44,6 +49,9 @@ var boss = {
     },
 
     desenhar(canvas, sombra=false) {
+        if (this.modo == "morto") {
+            return;
+        }
         var ctx = canvas.getContext('2d');
 
         var tile_x = this.animacao 
@@ -70,6 +78,9 @@ var boss = {
         }
         if (this.modo == "atacando"){
             imagemASerDesenhada = imagemBossAtaque
+        }
+        if (this.modo == "morre"){
+            imagemASerDesenhada = imagemBossMorrendo
         }
 
         if (sombra) {
@@ -106,6 +117,16 @@ var boss = {
     },
 
     atualizarModo() {
+        if (this.modo == "morre" || this.modo == "morto") {
+            return;
+        }
+        if (this.vida <= 0 && this.modo != "morre") {
+            this.modo = "morre"
+            this.acumuladorAnimacao = 0;
+            this.animacao = 0;
+            return;
+        }
+
         var dx = personagem.x - this.x;
         var dy = personagem.y+1 - this.y;
         var distance = Math.sqrt(dx * dx + dy * dy);
@@ -124,6 +145,9 @@ var boss = {
     },
 
     atualizar(tempoQuePassou) {
+        if (this.modo == "morto") {
+            return;
+        }
         this.atualizarAnimacao(tempoQuePassou);
 
         this.atualizarModo();
@@ -139,6 +163,10 @@ var boss = {
         if (this.modo == "atacando") {
             alturaFinal = altura_atacando*this.grade.tamanho;
         }
+        if (this.modo == "morre") {
+            alturaFinal = this.z;
+        }
+
         var diferencaAltura = alturaFinal - this.z;
         this.z = this.z + diferencaAltura*velocidadeAtaqueZ*tempoQuePassou;
     },
@@ -156,6 +184,10 @@ var boss = {
             tempoParaTrocar = tempo_para_trocar_animacao_bossAtacando;
             maxAnimacao = max_animacao_bossAtacando;
         }
+        if (this.modo == "morre"){
+            tempoParaTrocar = tempo_para_trocar_animacao_bossMorrendo;
+            maxAnimacao = max_animacao_bossMorrendo;
+        }
         // verifica se deve reiniciar a animação
         if (this.acumuladorAnimacao > tempoParaTrocar) {
             // debita o tempo utilizado do acumulador
@@ -163,7 +195,27 @@ var boss = {
 
             // executa animação
             this.animacao = this.animacao + 1;
-            if (this.animacao >= maxAnimacao) this.animacao = 0;
+            if (this.animacao >= maxAnimacao) {
+                if (this.modo == "morre") {
+                    this.modo = "morto";
+                    alert('you win');
+                    return;
+                }
+                this.animacao = 0; // reinicia
+            }
+        }
+    },
+    receberDano(quantidade_de_Dano) {
+        if(this.vida <= 0){
+            console.log( "boss ja esta morto")
+            return;
+        }
+
+        this.vida -= quantidade_de_Dano
+        console.log( "recebi dano. vida atual: " + this.vida)
+
+        if(this.vida <= 0 ){
+            console.log("morreu")
         }
     }
 }
