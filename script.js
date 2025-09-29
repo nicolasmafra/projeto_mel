@@ -22,8 +22,10 @@ function configurarCanvas() {
 }
 
 function configurarEventos() {
-    window.addEventListener('keydown', teclaApertada);
-    window.addEventListener('keyup', teclaLevantada);
+    window.addEventListener('keydown', botaoApertado);
+    window.addEventListener('keyup', botaoLevantado);
+    canvas.addEventListener('pointerdown', botaoApertado);
+    canvas.addEventListener('pointerup', botaoLevantado);
 }
 
 function configurarGrade() {
@@ -80,11 +82,11 @@ function reiniciarCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-function teclaApertada(evento) {
+function botaoApertado(evento) {
     personagem.iniciarMovimento(evento);
 }
 
-function teclaLevantada(evento) {
+function botaoLevantado(evento) {
     personagem.pararMovimento(evento);
 }
 function colidiu(coisa1, coisa2) {

@@ -111,13 +111,12 @@ var personagem = {
             this.velocidade.x = +velocidade_movimento * this.grade.tamanho;
             this.imagemInvertida = false;
         }
-        if(evento.key === 'f'){
+        if(evento.key === 'f' || evento instanceof PointerEvent){
             this.modo = "ataque1"
-            this.atacou = false
+            this.atacou = false;
             this.acumuladorAnimacao = 0;
             this.animacao = 0;
         }
-    
     },
 
     pararMovimento(evento) {
