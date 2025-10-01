@@ -16,6 +16,7 @@ const distance_maxima = 3; // em grades
 const altura_voando = 4;
 const altura_atacando = 1; //em grades
 const velocidadeAtaqueZ = 1; // em 1/s
+const vidaMaximaBoss = 130;
 
 const imagemBossVoando = new Image();
 imagemBossVoando.src = 'assets/bossVoando.png';
@@ -37,7 +38,7 @@ var boss = {
     grade: null,
     modo: "voando",
     dano: 10,
-    vida: 100,
+    vida: vidaMaximaBoss,
     tamanho: null,
     raio: null,
 
@@ -48,7 +49,7 @@ var boss = {
         this.z = altura_voando*this.grade.tamanho;
     },
 
-    desenhar(canvas, sombra=false) {
+    desenhar(canvas, tipoDesenho="imagem") {
         if (this.modo == "morto") {
             return;
         }
@@ -83,11 +84,25 @@ var boss = {
             imagemASerDesenhada = imagemBossMorrendo
         }
 
-        if (sombra) {
+        if (tipoDesenho == "sombra") {
             ctx.fillStyle = "#00000080";
             ctx.beginPath();
             ctx.ellipse(this.x, this.y, this.tamanho/2, this.tamanho/4, 0, 0, 2*Math.PI);
             ctx.fill();
+        } else if (tipoDesenho == "gui") {
+
+            var x = (1/3) * canvas.width;
+            var y = (0.9) * canvas.height;
+            var width = (1/3) * canvas.width;
+            var height = (0.04) * canvas.height;
+
+            ctx.fillStyle = "#080808ff";
+            ctx.fillRect(x, y, width, height);
+
+            var fracaoVida = this.vida/vidaMaximaBoss;
+            ctx.fillStyle = "#440909ff";
+            ctx.fillRect(x, y, width * fracaoVida, height);
+
         } else {
             ctx.drawImage(
                 imagemASerDesenhada,
@@ -98,7 +113,11 @@ var boss = {
     },
 
     desenharSombra(canvas) {
-        this.desenhar(canvas, true);
+        this.desenhar(canvas, "sombra");
+    },
+
+    desenharGui(canvas) {
+        this.desenhar(canvas, "gui");
     },
 
     aproximarBoss(tempoQuePassou) {
@@ -211,11 +230,12 @@ var boss = {
             return;
         }
 
-        this.vida -= quantidade_de_Dano
+        this.vida -= quantidade_de_Dano;
         console.log( "recebi dano. vida atual: " + this.vida)
 
         if(this.vida <= 0 ){
             console.log("morreu")
+            this.vida = 0
         }
     }
 }

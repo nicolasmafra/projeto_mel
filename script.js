@@ -77,6 +77,11 @@ function desenhar() {
     coisas.forEach(coisa => {
         coisa.desenhar(canvas);
     })
+    coisas.forEach(coisa => {
+        if (coisa.desenharGui) {
+            coisa.desenharGui(canvas);
+        }
+    })
 }
 
 function reiniciarCanvas() {

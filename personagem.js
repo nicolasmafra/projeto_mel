@@ -101,17 +101,18 @@ var personagem = {
     },
 
     iniciarMovimento(evento) {
-        if (evento.key === 'ArrowUp') this.velocidade.y = -velocidade_movimento * this.grade.tamanho;
-        if (evento.key === 'ArrowDown') this.velocidade.y = +velocidade_movimento * this.grade.tamanho;
-        if (evento.key === 'ArrowLeft') {
+        if (evento.code === 'ArrowUp') this.velocidade.y = -velocidade_movimento * this.grade.tamanho;
+        if (evento.code === 'ArrowDown') this.velocidade.y = +velocidade_movimento * this.grade.tamanho;
+        if (evento.code === 'ArrowLeft') {
             this.velocidade.x = -velocidade_movimento * this.grade.tamanho;
             this.imagemInvertida = true;
         }
-        if (evento.key === 'ArrowRight') {
+        if (evento.code === 'ArrowRight') {
             this.velocidade.x = +velocidade_movimento * this.grade.tamanho;
             this.imagemInvertida = false;
         }
-        if (evento.key === 'Enter' && this.modo == "normal") {
+        var botaoAtaqueApertado = evento.code === 'Enter' || evento.code === 'Space';
+        if (botaoAtaqueApertado && this.modo == "normal") {
             this.modo = "ataque1"
             this.atacou = false;
             this.acumuladorAnimacao = 0;
