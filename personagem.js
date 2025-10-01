@@ -1,11 +1,15 @@
 const max_animacao_andando = 8;
 const max_animacao_ataque1 = 6;
+const max_animacao_ataque2 = 6;
+const max_animacao_ataque3 = 9;
 const tile_size_personagem = 100;
 const tamanho_real_personagem = 10; // tamanho em pixels dentro do tile
 const y_real_personagem = 57;
 const frequencia_animacao_personagem = 20; // vezes por segundo
 const tempo_para_trocar_animacao_personagem_andando = 1/frequencia_animacao_personagem; // em segundos
 const tempo_para_trocar_animacao_personagem_Ataque1 = 1/frequencia_animacao_personagem; // em segundos
+const tempo_para_trocar_animacao_personagem_Ataque2 = 1/frequencia_animacao_personagem; // em segundos
+const tempo_para_trocar_animacao_personagem_Ataque3 = 1/frequencia_animacao_personagem; // em segundos
 const velocidade_movimento = 5; // grades / segundo
 const grades_do_personagem = 1;
 
@@ -14,6 +18,12 @@ imagemPersonagem.src = 'assets/personagemAndando.png';
 
 var imagemPersonagemAtaque1 = new Image();
 imagemPersonagemAtaque1.src = 'assets/personagemAtaque1.png';
+
+var imagemPersonagemAtaque2 = new Image();
+imagemPersonagemAtaque2.src = 'assets/personagemAtaque2.png';
+
+var imagemPersonagemAtaque3 = new Image();
+imagemPersonagemAtaque3.src = 'assets/personagemAtaque3.png';
 
 var personagem = {
     x: 100,
@@ -29,7 +39,7 @@ var personagem = {
     },
     grade: null,
     modo:"normal",
-    dano: 25,
+    dano: 30,
     vida: 100,
     podeDarDano: true,
     imagemInvertida: false,
@@ -70,6 +80,12 @@ var personagem = {
         }
         if (this.modo == "ataque1"){
             imagemASerDesenhada = imagemPersonagemAtaque1
+        }
+        if (this.modo == "ataque2"){
+            imagemASerDesenhada = imagemPersonagemAtaque2
+        }
+        if (this.modo == "ataque3"){
+            imagemASerDesenhada = imagemPersonagemAtaque3
         }
 
         if (sombra) {
@@ -114,6 +130,20 @@ var personagem = {
         var botaoAtaqueApertado = evento.code === 'Enter' || evento.code === 'Space';
         if (botaoAtaqueApertado && this.modo == "normal") {
             this.modo = "ataque1"
+            this.atacou = false;
+            this.acumuladorAnimacao = 0;
+            this.animacao = 0;
+        }
+        var botaoAtaque2Apertado = evento.code === 'KeyF' 
+        if (botaoAtaque2Apertado && this.modo == "normal") {
+            this.modo = "ataque2"
+            this.atacou = false;
+            this.acumuladorAnimacao = 0;
+            this.animacao = 0;
+        }
+        var botaoAtaque3Apertado = evento.code === 'KeyG' 
+        if (botaoAtaque3Apertado && this.modo == "normal") {
+            this.modo = "ataque3"
             this.atacou = false;
             this.acumuladorAnimacao = 0;
             this.animacao = 0;
@@ -174,6 +204,14 @@ var personagem = {
             tempoParaTrocar = tempo_para_trocar_animacao_personagem_Ataque1;
             maxAnimacao = max_animacao_ataque1;
         }
+        if (this.modo == "ataque2"){
+            tempoParaTrocar = tempo_para_trocar_animacao_personagem_Ataque2;
+            maxAnimacao = max_animacao_ataque2;
+        }
+        if (this.modo == "ataque3"){
+            tempoParaTrocar = tempo_para_trocar_animacao_personagem_Ataque3;
+            maxAnimacao = max_animacao_ataque3;
+        }
 
         this.acumuladorAnimacao = this.acumuladorAnimacao + tempoQuePassou;
 
@@ -187,7 +225,7 @@ var personagem = {
             // verifica se terminou a animação
             if (this.animacao >= maxAnimacao) {
                 this.animacao = 0; // reinicia
-                if (this.modo == "ataque1"){
+                if (this.modo == "ataque1" || this.modo == "ataque2" || this.modo == "ataque3"){
                     this.modo = "normal";
                     this.acumuladorAnimacao = 0;
                 }
@@ -196,9 +234,20 @@ var personagem = {
     },
 
     verificarAtaque() {
-        if(this.modo == "ataque1" && colidiu(personagem, boss) && ! this.atacou) {
+        if (this.atacou || !colidiu(personagem, boss)) {
+            return;
+        }
+        if(this.modo == "ataque1") {
             this.atacou = true
             boss.receberDano(30)
+        }
+        if(this.modo == "ataque2") {
+            this.atacou = true
+            boss.receberDano(20)
+        }
+        if(this.modo == "ataque3") {
+            this.atacou = true
+            boss.receberDano(10)
         }
     },
 };
