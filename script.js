@@ -65,6 +65,7 @@ function executarLoop() {
     desenhar();
 
     ultimaAtualizacao = agora;
+    //setTimeout(() => requestAnimationFrame(executarLoop), 1000);
     requestAnimationFrame(executarLoop); // chama de novo
 }
 
@@ -85,8 +86,8 @@ function desenhar() {
         coisa.desenhar(canvas);
     })
     coisas.forEach(coisa => {
-        if (coisa.desenharGui) {
-            coisa.desenharGui(canvas);
+        if (coisa.desenharBarra) {
+            coisa.desenharBarra(canvas);
         }
     })
 }

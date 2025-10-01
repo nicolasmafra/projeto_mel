@@ -39,7 +39,8 @@ var boss = {
     animacao: 0,
     grade: null,
     modo: "voando",
-    dano: 10,
+    dano: 40,
+    atacou: false,
     vida: vidaMaximaBoss,
     tamanho: null,
     raio: null,
@@ -93,7 +94,7 @@ var boss = {
             ctx.beginPath();
             ctx.ellipse(this.x, this.y, this.tamanho/2, this.tamanho/4, 0, 0, 2*Math.PI);
             ctx.fill();
-        } else if (tipoDesenho == "gui") {
+        } else if (tipoDesenho == "barra") {
 
             var x = (1/3) * canvas.width;
             var y = (0.1) * canvas.height;
@@ -137,9 +138,8 @@ var boss = {
     desenharSombra(canvas) {
         this.desenhar(canvas, "sombra");
     },
-
-    desenharGui(canvas) {
-        this.desenhar(canvas, "gui");
+    desenharBarra(canvas) {
+        this.desenhar(canvas, "barra");
     },
 
     aproximarBoss(tempoQuePassou) {
@@ -173,7 +173,7 @@ var boss = {
         var dy = personagem.y+1 - this.y;
         var distance = Math.sqrt(dx * dx + dy * dy);
 
-        if(distance < 1 && this.modo != "atacando"){
+        if(distance < 10 && this.modo != "atacando"){
             this.modo = "atacando";
             this.acumuladorAnimacao = 0;
             this.animacao = 0;
@@ -196,6 +196,7 @@ var boss = {
             return;
         }
         this.atualizarAnimacao(tempoQuePassou);
+        this.verificarAtaque();
 
         this.atualizarModo(tempoQuePassou);
         if(this.modo == "voando"){
@@ -253,6 +254,18 @@ var boss = {
             }
         }
     },
+
+    verificarAtaque() {
+        
+        if (this.atacou || !colidiu(boss, personagem)) {
+            return;
+        }
+        if(this.modo == "atacando") {
+            this.atacou || colidiu (boss, personagem) == true
+            personagem.receberDano(40)
+        }
+    },
+
     receberDano(quantidade_de_Dano) {
         if(this.vida <= 0){
             console.log( "boss ja esta morto")

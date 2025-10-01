@@ -2,6 +2,7 @@ const max_animacao_andando = 8;
 const max_animacao_ataque1 = 6;
 const max_animacao_ataque2 = 6;
 const max_animacao_ataque3 = 9;
+const max_animacao_morrendo = 4;
 const tile_size_personagem = 100;
 const tamanho_real_personagem = 10; // tamanho em pixels dentro do tile
 const y_real_personagem = 57;
@@ -10,8 +11,11 @@ const tempo_para_trocar_animacao_personagem_andando = 1/frequencia_animacao_pers
 const tempo_para_trocar_animacao_personagem_Ataque1 = 1/frequencia_animacao_personagem; // em segundos
 const tempo_para_trocar_animacao_personagem_Ataque2 = 1/frequencia_animacao_personagem; // em segundos
 const tempo_para_trocar_animacao_personagem_Ataque3 = 1/frequencia_animacao_personagem; // em segundos
+const tempo_para_trocar_animacao_personagem_Morrendo = 1/frequencia_animacao_personagem; // em segundos
 const velocidade_movimento = 5; // grades / segundo
 const grades_do_personagem = 1;
+const vidaMaximaPersonagem = 100;
+const tempoMaximoDanoPersonagem = 1; // em segundos
 
 var imagemPersonagem = new Image();
 imagemPersonagem.src = 'assets/personagemAndando.png';
@@ -24,6 +28,9 @@ imagemPersonagemAtaque2.src = 'assets/personagemAtaque2.png';
 
 var imagemPersonagemAtaque3 = new Image();
 imagemPersonagemAtaque3.src = 'assets/personagemAtaque3.png';
+
+var imagemPersonagemMorrendo = new Image();
+imagemPersonagemMorrendo.src = 'assets/PersonagemMorrendo.png';
 
 var personagem = {
     x: 100,
@@ -40,12 +47,13 @@ var personagem = {
     grade: null,
     modo:"normal",
     dano: 30,
-    vida: 100,
+    vida: vidaMaximaPersonagem,
     podeDarDano: true,
     imagemInvertida: false,
     tamanho: null,
     raio: null,
     atacou: false,
+    tempoDano: 0,
 
     configurar(grade) {
         this.grade = grade;
@@ -53,7 +61,10 @@ var personagem = {
         this.raio = this.tamanho /2;
     },
 
-    desenhar(canvas, sombra=false) {
+    desenhar (canvas, tipoDesenho = "imagem") {
+        if (this.modo == "morto") {
+            return;
+        }
         var ctx = canvas.getContext('2d');
 
         var tile_x = this.animacao;
@@ -87,8 +98,11 @@ var personagem = {
         if (this.modo == "ataque3"){
             imagemASerDesenhada = imagemPersonagemAtaque3
         }
+        if (this.modo == "morrendo"){
+            imagemASerDesenhada = imagemPersonagemMorrendo
+        }
 
-        if (sombra) {
+        if (tipoDesenho == "sombra") {
             ctx.fillStyle = "#00000080";
             ctx.beginPath();
             ctx.ellipse(this.x, this.y, this.tamanho/2, this.tamanho/4, 0, 0, 2*Math.PI);
@@ -113,7 +127,7 @@ var personagem = {
     },
 
     desenharSombra(canvas) {
-        this.desenhar(canvas, true);
+        this.desenhar(canvas, "sombra");
     },
 
     iniciarMovimento(evento) {
@@ -155,12 +169,33 @@ var personagem = {
         if (evento.key === 'ArrowDown' && this.velocidade.y > 0) this.velocidade.y = 0;
         if (evento.key === 'ArrowLeft' && this.velocidade.x < 0) this.velocidade.x = 0;
         if (evento.key === 'ArrowRight' && this.velocidade.x > 0) this.velocidade.x = 0;
+
+    },
+
+    atualizarModo(tempoQuePassou) {
+        if (this.modo == "morrendo" || this.modo == "morto") {
+            return;
+        }
+        if (this.vida <= 0 && this.modo != "morrendo") {
+            this.modo = "morrendo"
+            this.acumuladorAnimacao = 0;
+            this.animacao = 0;
+            return;
+        }
     },
 
     atualizar(tempoQuePassou) {
+        if (this.modo == "morto") {
+            return;
+        }
+        this.atualizarModo(tempoQuePassou);
         this.mover(tempoQuePassou);
         this.atualizarAnimacao(tempoQuePassou);
         this.verificarAtaque();
+        this.tempoDano -= tempoQuePassou;
+        if (this.tempoDano < 0) {
+            this.tempoDano = 0;
+        }
     },
     
     mover(tempoQuePassou) {
@@ -212,6 +247,10 @@ var personagem = {
             tempoParaTrocar = tempo_para_trocar_animacao_personagem_Ataque3;
             maxAnimacao = max_animacao_ataque3;
         }
+        if (this.modo == "morrendo"){
+            tempoParaTrocar = tempo_para_trocar_animacao_personagem_Morrendo;
+            maxAnimacao = max_animacao_morrendo;
+        }
 
         this.acumuladorAnimacao = this.acumuladorAnimacao + tempoQuePassou;
 
@@ -224,6 +263,11 @@ var personagem = {
             this.animacao = this.animacao + 1;
             // verifica se terminou a animação
             if (this.animacao >= maxAnimacao) {
+                if (this.modo == "morrendo") {
+                    this.modo = "morto";
+                    alert('game over');
+                    return;
+                }
                 this.animacao = 0; // reinicia
                 if (this.modo == "ataque1" || this.modo == "ataque2"){
                     this.modo = "normal";
@@ -263,5 +307,18 @@ var personagem = {
             boss.receberDano(20)
         }
     },
+    receberDano(quantidade_de_Dano) {
+        if (this.tempoDano > 0) {
+            return; // já está recebendo dano
+        }
+        this.vida -= quantidade_de_Dano;
+        this.tempoDano = tempoMaximoDanoPersonagem;
+        console.log( "personagem: recebi dano. vida atual: " + this.vida)
+
+        if(this.vida <= 0 ){
+            console.log("personagem: morreu")
+            this.vida = 0
+        }
+    }
 };
 
