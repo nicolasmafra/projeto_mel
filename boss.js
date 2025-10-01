@@ -41,6 +41,7 @@ var boss = {
     vida: vidaMaximaBoss,
     tamanho: null,
     raio: null,
+    imagemInvertida: false,
 
     configurar(grade) {
         this.grade = grade;
@@ -92,7 +93,7 @@ var boss = {
         } else if (tipoDesenho == "gui") {
 
             var x = (1/3) * canvas.width;
-            var y = (0.9) * canvas.height;
+            var y = (0.1) * canvas.height;
             var width = (1/3) * canvas.width;
             var height = (0.04) * canvas.height;
 
@@ -103,6 +104,24 @@ var boss = {
             ctx.fillStyle = "#440909ff";
             ctx.fillRect(x, y, width * fracaoVida, height);
 
+            ctx.strokeStyle = "#a78b10ff";
+            ctx.lineWidth = 2; // espessura da borda
+            ctx.strokeRect(x, y, width, height);
+
+            ctx.strokeStyle = "#fcf04bff";
+            ctx.lineWidth = 2; 
+            ctx.strokeRect(x, y, width * fracaoVida, height);
+
+        } else if (this.imagemInvertida) {
+            
+            ctx.save();
+            ctx.translate(canvasX + canvasWidth / 2, canvasY + canvasHeight / 2);
+            ctx.scale(-1, 1);
+            ctx.drawImage(
+                imagemASerDesenhada, imageX, imageY, imagemWidth, imagemHeight,
+                -canvasWidth / 2, -canvasHeight / 2, canvasWidth, canvasHeight
+            );
+            ctx.restore();
         } else {
             ctx.drawImage(
                 imagemASerDesenhada,
@@ -133,6 +152,7 @@ var boss = {
             this.x += (dx / distance) * velocidade * tempoQuePassou;
             this.y += (dy / distance) * velocidade * tempoQuePassou;
         }
+        
     },
 
     atualizarModo() {

@@ -16,15 +16,18 @@ html, body {
     background-color: rgb(56, 14, 7);
 }
 #mensagem-inicial {
+    font-family: Arial;
     width: 100vw;
     height: 100vh;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     background: rgb(190, 169, 45);
     font-size: 2em;
 }
 #botao-comecar {
+    font-family: Arial;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -46,16 +49,11 @@ html, body {
 </head>
 <body>
     <div id="mensagem-inicial">
-        <div>
         <p>Bem-vindo, clique no botao para começar o jogo</p>
         <button id="botao-comecar">começar</button>
-        </div>
     </div>
     <canvas id="meuCanvas"></canvas>
     <span id="log"></span>
-    <div class="barra_vida">
-        <div class="vida_atual" id="vida1"></div>
-    </div>
 
     <script>        
         document.getElementById('botao-comecar').onclick = function() {
