@@ -225,7 +225,12 @@ var personagem = {
             // verifica se terminou a animação
             if (this.animacao >= maxAnimacao) {
                 this.animacao = 0; // reinicia
-                if (this.modo == "ataque1" || this.modo == "ataque2" || this.modo == "ataque3"){
+                if (this.modo == "ataque1" || this.modo == "ataque2"){
+                    this.modo = "normal";
+                    this.acumuladorAnimacao = 0;
+                }
+                if(this.modo == "ataque3") {
+                    adicionarCoisa(new Flecha(this))
                     this.modo = "normal";
                     this.acumuladorAnimacao = 0;
                 }
@@ -234,7 +239,19 @@ var personagem = {
     },
 
     verificarAtaque() {
-        if (this.atacou || !colidiu(personagem, boss)) {
+        var espada = {
+            x: this.x,
+            y: this.y,
+            z: this.z,
+            raio: this.raio,
+        };
+        if (this.imagemInvertida) {
+            espada.x -= this.raio;
+        } else {
+            espada.x += this.raio;
+        }
+
+        if (this.atacou || !colidiu(espada, boss)) {
             return;
         }
         if(this.modo == "ataque1") {
@@ -244,10 +261,6 @@ var personagem = {
         if(this.modo == "ataque2") {
             this.atacou = true
             boss.receberDano(20)
-        }
-        if(this.modo == "ataque3") {
-            this.atacou = true
-            boss.receberDano(10)
         }
     },
 };

@@ -10,13 +10,15 @@ const y_real_boss_parado = 55;
 const tempo_para_trocar_animacao_bossVoando = 0.2;
 const tempo_para_trocar_animacao_bossAtacando = 0.2;
 const tempo_para_trocar_animacao_bossMorrendo = 0.2;
-const velocidade_maxima_boss = 200;
+const velocidade_maxima_boss = 100;
 const suavidade_boss = 0.08;
 const distance_maxima = 3; // em grades
 const altura_voando = 4;
 const altura_atacando = 1; //em grades
-const velocidadeAtaqueZ = 1; // em 1/s
+const velocidade_z_voando = 0.8;
+const velocidadeAtaqueZ = 2; // em 1/s
 const vidaMaximaBoss = 130;
+const tempo_maximo_ataque_boss = 4;
 
 const imagemBossVoando = new Image();
 imagemBossVoando.src = 'assets/bossVoando.png';
@@ -28,8 +30,8 @@ const imagemBossMorrendo = new Image();
 imagemBossMorrendo.src = 'assets/bossMorrendo.png';
 
 var boss = {
-    x: 900,
-    y: 400,
+    x: 400,
+    y: 600,
     largura: 200,
     altura:500,
     z: null, 
@@ -42,11 +44,12 @@ var boss = {
     tamanho: null,
     raio: null,
     imagemInvertida: false,
+    tempoAtaque: 0,
 
     configurar(grade) {
         this.grade = grade;
         this.tamanho = grades_do_boss*this.grade.tamanho;
-        this.raio = 2*this.tamanho / 2;
+        this.raio = this.tamanho / 2;
         this.z = altura_voando*this.grade.tamanho;
     },
 
@@ -155,7 +158,7 @@ var boss = {
         
     },
 
-    atualizarModo() {
+    atualizarModo(tempoQuePassou) {
         if (this.modo == "morre" || this.modo == "morto") {
             return;
         }
@@ -174,9 +177,14 @@ var boss = {
             this.modo = "atacando";
             this.acumuladorAnimacao = 0;
             this.animacao = 0;
+            this.tempoAtaque = 0;
+            return;
+        }
+        if (this.modo == "atacando") {
+            this.tempoAtaque += tempoQuePassou;
         }
         const distanceMaxima = distance_maxima*this.grade.tamanho;
-        if(distance > distanceMaxima && this.modo != "voando"){
+        if(distance > distanceMaxima && this.modo != "voando" && this.tempoAtaque > tempo_maximo_ataque_boss){
             this.modo = "voando"
             this.acumuladorAnimacao = 0;
             this.animacao = 0;
@@ -189,7 +197,7 @@ var boss = {
         }
         this.atualizarAnimacao(tempoQuePassou);
 
-        this.atualizarModo();
+        this.atualizarModo(tempoQuePassou);
         if(this.modo == "voando"){
             this.aproximarBoss(tempoQuePassou);
         }
@@ -206,8 +214,9 @@ var boss = {
             alturaFinal = this.z;
         }
 
+        var velocidadeZ = this.modo == "voando" ? velocidade_z_voando : velocidadeAtaqueZ;
         var diferencaAltura = alturaFinal - this.z;
-        this.z = this.z + diferencaAltura*velocidadeAtaqueZ*tempoQuePassou;
+        this.z = this.z + diferencaAltura*velocidadeZ*tempoQuePassou;
     },
 
     atualizarAnimacao(tempoQuePassou) {

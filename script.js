@@ -30,6 +30,19 @@ function configurarEventos() {
     canvas.addEventListener('pointerup', botaoLevantado);
 }
 
+var coisas = [
+    personagem,
+    boss,
+];
+
+function adicionarCoisa(coisaNova) {
+    coisas.push(coisaNova);
+}
+
+function removerCoisa(coisaParaSerRemovida) {
+    coisas = coisas.filter(coisa => coisa != coisaParaSerRemovida);
+}
+
 function configurarGrade() {
     grade.minX = this.grade.tamanho/2;
     grade.minY = this.grade.tamanho/2;
@@ -48,8 +61,7 @@ function executarLoop() {
     if (tempoQuePassou > max_tempo) {
         tempoQuePassou = max_tempo;
     }
-    personagem.atualizar(tempoQuePassou);
-    boss.atualizar(tempoQuePassou);
+    coisas.forEach(coisa => coisa.atualizar(tempoQuePassou));
     desenhar();
 
     ultimaAtualizacao = agora;
@@ -59,11 +71,6 @@ function executarLoop() {
 function desenhar() {
     reiniciarCanvas();
     chao.desenhar(canvas);
-
-    var coisas = [
-        personagem,
-        boss,
-    ];
 
     coisas.sort(function(a,b) { //ordenar para variavel y 
         return a.y < b.y ? -1 : a.y > b.y ? 1 : 0;
