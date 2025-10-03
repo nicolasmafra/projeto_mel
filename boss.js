@@ -11,13 +11,14 @@ const tempo_para_trocar_animacao_bossVoando = 0.2;
 const tempo_para_trocar_animacao_bossAtacando = 0.2;
 const tempo_para_trocar_animacao_bossMorrendo = 0.2;
 const velocidade_maxima_boss = 100;
+const velocidade_movimento_Boss = 5;
 const suavidade_boss = 0.08;
-const distance_maxima = 3; // em grades
+const distance_maxima = grades_do_boss/2; // em grades
 const altura_voando = 4;
 const altura_atacando = 1; //em grades
 const velocidade_z_voando = 0.8;
 const velocidadeAtaqueZ = 2; // em 1/s
-const vidaMaximaBoss = 130;
+const vidaMaximaBoss = 200;
 const tempo_maximo_ataque_boss = 4;
 
 const imagemBossVoando = new Image();
@@ -36,6 +37,10 @@ var boss = {
     altura:500,
     z: null, 
     acumuladorAnimacao: 0,
+    velocidade: {
+        x: 0,
+        y: 0,
+    },
     animacao: 0,
     grade: null,
     modo: "voando",
@@ -71,6 +76,10 @@ var boss = {
         var correcaoEscala = this.tamanho / tamanho_real_boss; // número adimensional
         var diferencaX = x_real_boss - tile_width_boss/2; // em pixels da imagem
         var diferencaY = y_real_boss_parado - tile_height_boss/2; // em pixels da imagem
+
+        if (this.imagemInvertida) {
+            diferencaX = -diferencaX;
+        }
 
         var canvasWidth = tile_width_boss * correcaoEscala;
         var canvasHeight = tile_height_boss * correcaoEscala;
@@ -155,7 +164,10 @@ var boss = {
             this.x += (dx / distance) * velocidade * tempoQuePassou;
             this.y += (dy / distance) * velocidade * tempoQuePassou;
         }
-        
+
+        if (this.modo == "voando") {
+            this.imagemInvertida = personagem.x > boss.x;
+        }
     },
 
     atualizarModo(tempoQuePassou) {
@@ -254,7 +266,7 @@ var boss = {
             }
         }
     },
-
+    
     verificarAtaque() {
         
         if (this.atacou || !colidiu(boss, personagem)) {

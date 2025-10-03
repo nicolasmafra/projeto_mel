@@ -14,7 +14,7 @@ const tempo_para_trocar_animacao_personagem_Ataque3 = 1/frequencia_animacao_pers
 const tempo_para_trocar_animacao_personagem_Morrendo = 1/frequencia_animacao_personagem; // em segundos
 const velocidade_movimento = 5; // grades / segundo
 const grades_do_personagem = 1;
-const vidaMaximaPersonagem = 100;
+const vidaMaximaPersonagem = 130;
 const tempoMaximoDanoPersonagem = 1; // em segundos
 
 var imagemPersonagem = new Image();
@@ -133,6 +133,7 @@ var personagem = {
     iniciarMovimento(evento) {
         if (evento.code === 'ArrowUp') this.velocidade.y = -velocidade_movimento * this.grade.tamanho;
         if (evento.code === 'ArrowDown') this.velocidade.y = +velocidade_movimento * this.grade.tamanho;
+        
         if (evento.code === 'ArrowLeft') {
             this.velocidade.x = -velocidade_movimento * this.grade.tamanho;
             this.imagemInvertida = true;

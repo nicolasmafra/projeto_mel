@@ -1,9 +1,11 @@
 const tile_size_flecha = 32;
-const grades_flecha = 1;
-const y_real_flecha = 32;
+const tamanho_real_flecha = 8;
+const grades_flecha = 0.5;
+const y_real_flecha = 28;
 const velocidade_flecha = 50; // em grades por segundo
 const tempo_maximo_flecha = 1; // em segundos
 const tamanho_sombra_flecha = 0.1;
+const distancia_arco = 1; // em grades
 
 const imagem_flecha = new Image();
 imagem_flecha.src = 'assets/flecha.png';
@@ -19,14 +21,14 @@ class Flecha {
     tempo = 0;
 
     constructor(personagem) {
+        this.grade = personagem.grade;
         this.x = personagem.x;
         if (personagem.imagemInvertida) {
-            this.x -= 2*personagem.raio;
+            this.x -= distancia_arco * this.grade.tamanho;
         } else {
-            this.x += 2*personagem.raio;
+            this.x += distancia_arco * this.grade.tamanho;
         }
         this.y = personagem.y;
-        this.grade = personagem.grade;
         this.tamanho = grades_flecha*this.grade.tamanho;
         this.raio = this.tamanho /2;
         this.imagemInvertida = personagem.imagemInvertida;
@@ -40,7 +42,7 @@ class Flecha {
         var imagemWidth = tile_size_flecha;
         var imagemHeight = tile_size_flecha;
         
-        var correcaoEscala = 1; // número adimensional
+        var correcaoEscala = this.tamanho / tamanho_real_flecha; // número adimensional
         var diferencaY = y_real_flecha - tile_size_flecha/2; // em pixels da imagem
 
         var canvasWidth = tile_size_flecha * correcaoEscala;
