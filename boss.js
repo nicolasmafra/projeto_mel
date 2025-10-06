@@ -19,7 +19,7 @@ const altura_atacando = 1; //em grades
 const velocidade_z_voando = 0.8;
 const velocidadeAtaqueZ = 2; // em 1/s
 const vidaMaximaBoss = 200;
-const tempo_maximo_ataque_boss = 4;
+const tempo_minimo_ataque_boss = 2;
 
 const imagemBossVoando = new Image();
 imagemBossVoando.src = 'assets/bossVoando.png';
@@ -108,22 +108,28 @@ var boss = {
             var x = (1/3) * canvas.width;
             var y = (0.1) * canvas.height;
             var width = (1/3) * canvas.width;
-            var height = (0.04) * canvas.height;
+            var height = (0.03) * canvas.height;
 
             ctx.fillStyle = "#080808ff";
             ctx.fillRect(x, y, width, height);
 
             var fracaoVida = this.vida/vidaMaximaBoss;
-            ctx.fillStyle = "#440909ff";
+            ctx.fillStyle = "#2d0e57ff";
             ctx.fillRect(x, y, width * fracaoVida, height);
 
-            ctx.strokeStyle = "#a78b10ff";
+            ctx.strokeStyle = "#5a5a57ff";
             ctx.lineWidth = 2; // espessura da borda
             ctx.strokeRect(x, y, width, height);
 
-            ctx.strokeStyle = "#fcf04bff";
+            ctx.strokeStyle = "#c44bfcff";
             ctx.lineWidth = 2; 
             ctx.strokeRect(x, y, width * fracaoVida, height);
+
+            ctx.font = "18px Arial";       
+            ctx.fillStyle = "#000000ff"
+            ctx.textAlign = "center"; 
+
+            ctx.fillText("BOSS", x + width /2, y);
 
         } else if (this.imagemInvertida) {
             
@@ -196,7 +202,7 @@ var boss = {
             this.tempoAtaque += tempoQuePassou;
         }
         const distanceMaxima = distance_maxima*this.grade.tamanho;
-        if(distance > distanceMaxima && this.modo != "voando" && this.tempoAtaque > tempo_maximo_ataque_boss){
+        if(distance > distanceMaxima && this.modo != "voando" && this.tempoAtaque > tempo_minimo_ataque_boss){
             this.modo = "voando"
             this.acumuladorAnimacao = 0;
             this.animacao = 0;
@@ -259,7 +265,8 @@ var boss = {
             if (this.animacao >= maxAnimacao) {
                 if (this.modo == "morre") {
                     this.modo = "morto";
-                    alert('you win');
+                    finalDeJogo = "you win";
+                    acabou = true;
                     return;
                 }
                 this.animacao = 0; // reinicia

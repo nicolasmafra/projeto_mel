@@ -6,6 +6,8 @@ var grade = {
     maxX: null,
     maxY: null,
 }
+var acabou = false
+var finalDeJogo = null
 
 function configurarEIniciar() {
     textoLog = document.getElementById("log");
@@ -66,6 +68,11 @@ function executarLoop() {
 
     ultimaAtualizacao = agora;
     //setTimeout(() => requestAnimationFrame(executarLoop), 1000);
+    if (acabou) {
+        desenharTelaFinal();
+        escritaFinal();
+        return;
+    }
     requestAnimationFrame(executarLoop); // chama de novo
 }
 
@@ -115,4 +122,27 @@ function colidiu(coisa1, coisa2) {
     var distanciaMinima = coisa1.raio + coisa2.raio;
 
     return distancia < distanciaMinima;
+}
+
+function desenharTelaFinal() {
+    var ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = "#080808ff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function escritaFinal() {
+    var ctx = canvas.getContext('2d');
+
+    ctx.font = "50px Arial";       
+    ctx.fillStyle = "#ffffffff"
+    ctx.textAlign = "center"; 
+
+    ctx.fillText(finalDeJogo, canvas.width/2, canvas.height/2);
+
+    if(finalDeJogo == "you win"){
+        ctx.fillText ("you win")
+    }else if(finalDeJogo == "game over"){
+        ctx.fillText ("game over")
+    }
 }

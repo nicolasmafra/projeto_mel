@@ -30,7 +30,7 @@ var imagemPersonagemAtaque3 = new Image();
 imagemPersonagemAtaque3.src = 'assets/personagemAtaque3.png';
 
 var imagemPersonagemMorrendo = new Image();
-imagemPersonagemMorrendo.src = 'assets/PersonagemMorrendo.png';
+imagemPersonagemMorrendo.src = 'assets/personagemMorrendo.png';
 
 var personagem = {
     x: 100,
@@ -107,6 +107,35 @@ var personagem = {
             ctx.beginPath();
             ctx.ellipse(this.x, this.y, this.tamanho/2, this.tamanho/4, 0, 0, 2*Math.PI);
             ctx.fill();
+
+            } else if (tipoDesenho == "barra") {
+
+            var x = (2/5) * canvas.width;
+            var y = (0.9) * canvas.height;
+            var width = (1/5) * canvas.width;
+            var height = (0.03) * canvas.height;
+
+            ctx.fillStyle = "#080808ff";
+            ctx.fillRect(x, y, width, height);
+
+            var fracaoVida = this.vida/vidaMaximaPersonagem;
+            ctx.fillStyle = "#440909ff";
+            ctx.fillRect(x, y, width * fracaoVida, height);
+
+            ctx.strokeStyle = "#a78b10ff";
+            ctx.lineWidth = 2; // espessura da borda
+            ctx.strokeRect(x, y, width, height);
+
+            ctx.strokeStyle = "#fcf04bff";
+            ctx.lineWidth = 2; 
+            ctx.strokeRect(x, y, width * fracaoVida, height);
+
+            ctx.font = "18px Arial";       
+            ctx.fillStyle = "#000000ff"
+            ctx.textAlign = "center"; 
+
+            ctx.fillText("PERSONAGEM", x + width /2, y + 2*height );
+
         } else if (this.imagemInvertida) {
             
             ctx.save();
@@ -128,6 +157,9 @@ var personagem = {
 
     desenharSombra(canvas) {
         this.desenhar(canvas, "sombra");
+    },
+    desenharBarra(canvas) {
+        this.desenhar(canvas, "barra");
     },
 
     iniciarMovimento(evento) {
@@ -266,7 +298,8 @@ var personagem = {
             if (this.animacao >= maxAnimacao) {
                 if (this.modo == "morrendo") {
                     this.modo = "morto";
-                    alert('game over');
+                    finalDeJogo = "game over";
+                    acabou = true;
                     return;
                 }
                 this.animacao = 0; // reinicia
