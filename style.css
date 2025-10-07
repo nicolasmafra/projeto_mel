@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    background-image: url("assets/chao2.jpg");
 }
 #tela-inicial {
     display: flex;
@@ -7,17 +8,15 @@ body {
     align-items: center;
     height: 100vh;
     justify-content: center;
-    gap: 10px;
+    backdrop-filter: blur(2px);
 }
 span {
     font-size: 2em;
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'arial';
     padding: 1em;
-    border: 5px solid;
-    background-color: #B2EBF2;
 }
 button {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: 'arial';
     font-size: 2em;
     padding: 0.5em;
     border-radius: 0.5em;
