@@ -265,7 +265,7 @@ var boss = {
             if (this.animacao >= maxAnimacao) {
                 if (this.modo == "morre") {
                     this.modo = "morto";
-                    finalDeJogo = "you win";
+                    textoFinal = "you win";
                     acabou = true;
                     return;
                 }

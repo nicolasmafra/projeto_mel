@@ -1,16 +1,19 @@
 const max_tempo = 0.5; // em segundos
 var canvas;
-var textoLog;
 var grade = {
     tamanho: 32,
     maxX: null,
     maxY: null,
 }
 var acabou = false
-var finalDeJogo = null
+var textoFinal = null
 
 function configurarEIniciar() {
-    textoLog = document.getElementById("log");
+    var divTelaInicial = document.getElementById('tela-inicial');
+    divTelaInicial.style.display = 'none';
+    canvas = document.getElementById('meuCanvas');
+    canvas.style.display = 'block';
+            
     configurarCanvas();
     configurarEventos();
     configurarGrade();
@@ -20,7 +23,6 @@ function configurarEIniciar() {
 };
 
 function configurarCanvas() {
-    canvas = document.getElementById('meuCanvas');
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
@@ -67,7 +69,6 @@ function executarLoop() {
     desenhar();
 
     ultimaAtualizacao = agora;
-    //setTimeout(() => requestAnimationFrame(executarLoop), 1000);
     if (acabou) {
         desenharTelaFinal();
         escritaFinal();
@@ -138,11 +139,5 @@ function escritaFinal() {
     ctx.fillStyle = "#ffffffff"
     ctx.textAlign = "center"; 
 
-    ctx.fillText(finalDeJogo, canvas.width/2, canvas.height/2);
-
-    if(finalDeJogo == "you win"){
-        ctx.fillText ("you win")
-    }else if(finalDeJogo == "game over"){
-        ctx.fillText ("game over")
-    }
+    ctx.fillText(textoFinal, canvas.width/2, canvas.height/2);
 }

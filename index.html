@@ -1,71 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Teste</title>
-    <style>
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-}
-#meuCanvas {
-    display: none;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgb(56, 14, 7);
-}
-#mensagem-inicial {
-    font-family: Arial;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: rgb(190, 169, 45);
-    font-size: 2em;
-}
-#botao-comecar {
-    font-family: Arial;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: lightblue;
-    font-size: 1em;
-    margin: 20px;
-    background-color: rgb(128, 124, 124);
-    padding: 10px 15px;
-    border: 2px solid #3d3d3d;
-    border-radius: 5px;
-    cursor: pointer;
-}
-#log {
-    position: fixed;
-    bottom: 0;
-}
-
-    </style>
+  <meta charset="UTF-8">
+  <title>Teste</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-<body>
-    <div id="mensagem-inicial">
-        <p>Bem-vindo, clique no botao para começar o jogo</p>
-        <button id="botao-comecar">começar</button>
-    </div>
-    <canvas id="meuCanvas"></canvas>
-    <span id="log"></span>
 
-    <script>        
-        document.getElementById('botao-comecar').onclick = function() {
-            document.getElementById('mensagem-inicial').style.display = 'none';
-            document.getElementById('meuCanvas').style.display = 'block';
-            configurarEIniciar();
-        }
-    </script>
-    <script src="chao.js"></script>
-    <script src="flecha.js"></script>
-    <script src="personagem.js"></script>
-    <script src="boss.js"></script>
-    <script src="script.js"></script>
+<body>
+  <div id="tela-inicial">
+    <span>Bem-vindo, clique no botao para começar o jogo</span>
+    <button id="botao-comecar" onclick="configurarEIniciar()">começar</button>
+  </div>
+  <canvas id="meuCanvas" style="display: none"></canvas>
+
+  <script src="chao.js"></script>
+  <script src="flecha.js"></script>
+  <script src="personagem.js"></script>
+  <script src="boss.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>

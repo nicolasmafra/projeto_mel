@@ -298,7 +298,7 @@ var personagem = {
             if (this.animacao >= maxAnimacao) {
                 if (this.modo == "morrendo") {
                     this.modo = "morto";
-                    finalDeJogo = "game over";
+                    textoFinal = "game over";
                     acabou = true;
                     return;
                 }
