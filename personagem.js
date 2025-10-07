@@ -2,6 +2,7 @@ const max_animacao_andando = 8;
 const max_animacao_ataque1 = 6;
 const max_animacao_ataque2 = 6;
 const max_animacao_ataque3 = 9;
+const max_animacao_perdendo = 4;
 const max_animacao_morrendo = 4;
 const tile_size_personagem = 100;
 const tamanho_real_personagem = 10; // tamanho em pixels dentro do tile
@@ -11,6 +12,7 @@ const tempo_para_trocar_animacao_personagem_andando = 1/frequencia_animacao_pers
 const tempo_para_trocar_animacao_personagem_Ataque1 = 1/frequencia_animacao_personagem; // em segundos
 const tempo_para_trocar_animacao_personagem_Ataque2 = 1/frequencia_animacao_personagem; // em segundos
 const tempo_para_trocar_animacao_personagem_Ataque3 = 1/frequencia_animacao_personagem; // em segundos
+const tempo_para_trocar_animacao_personagem_perdendo = 1/frequencia_animacao_personagem; // em segundos
 const tempo_para_trocar_animacao_personagem_Morrendo = 1/frequencia_animacao_personagem; // em segundos
 const velocidade_movimento = 5; // grades / segundo
 const grades_do_personagem = 1;
@@ -28,6 +30,9 @@ imagemPersonagemAtaque2.src = 'assets/personagemAtaque2.png';
 
 var imagemPersonagemAtaque3 = new Image();
 imagemPersonagemAtaque3.src = 'assets/personagemAtaque3.png';
+
+var imagemPersonagemPerdendoVida = new Image();
+imagemPersonagemPerdendoVida.src = 'assets/personagemPerdendoVida.png';
 
 var imagemPersonagemMorrendo = new Image();
 imagemPersonagemMorrendo.src = 'assets/personagemMorrendo.png';
@@ -98,6 +103,9 @@ var personagem = {
         if (this.modo == "ataque3"){
             imagemASerDesenhada = imagemPersonagemAtaque3
         }
+        if (this.modo == "perdendo_vida"){
+            imagemASerDesenhada = imagemPersonagemPerdendoVida
+        }
         if (this.modo == "morrendo"){
             imagemASerDesenhada = imagemPersonagemMorrendo
         }
@@ -163,6 +171,9 @@ var personagem = {
     },
 
     iniciarMovimento(evento) {
+        if(this.modo != "normal"){
+            return;
+        }
         if (evento.code === 'ArrowUp') this.velocidade.y = -velocidade_movimento * this.grade.tamanho;
         if (evento.code === 'ArrowDown') this.velocidade.y = +velocidade_movimento * this.grade.tamanho;
         
@@ -176,24 +187,18 @@ var personagem = {
         }
         var botaoAtaqueApertado = evento.code === 'Enter' || evento.code === 'Space';
         if (botaoAtaqueApertado && this.modo == "normal") {
-            this.modo = "ataque1"
+            this.trocarModo("ataque1");
             this.atacou = false;
-            this.acumuladorAnimacao = 0;
-            this.animacao = 0;
         }
         var botaoAtaque2Apertado = evento.code === 'KeyF' 
         if (botaoAtaque2Apertado && this.modo == "normal") {
-            this.modo = "ataque2"
+            this.trocarModo("ataque2");
             this.atacou = false;
-            this.acumuladorAnimacao = 0;
-            this.animacao = 0;
         }
         var botaoAtaque3Apertado = evento.code === 'KeyG' 
         if (botaoAtaque3Apertado && this.modo == "normal") {
-            this.modo = "ataque3"
+            this.trocarModo("ataque3");
             this.atacou = false;
-            this.acumuladorAnimacao = 0;
-            this.animacao = 0;
         }
     },
 
@@ -210,9 +215,7 @@ var personagem = {
             return;
         }
         if (this.vida <= 0 && this.modo != "morrendo") {
-            this.modo = "morrendo"
-            this.acumuladorAnimacao = 0;
-            this.animacao = 0;
+            this.trocarModo("morrendo");
             return;
         }
     },
@@ -280,6 +283,10 @@ var personagem = {
             tempoParaTrocar = tempo_para_trocar_animacao_personagem_Ataque3;
             maxAnimacao = max_animacao_ataque3;
         }
+        if (this.modo == "perdendo_vida"){
+            tempoParaTrocar = tempo_para_trocar_animacao_personagem_perdendo;
+            maxAnimacao = max_animacao_perdendo;
+        }
         if (this.modo == "morrendo"){
             tempoParaTrocar = tempo_para_trocar_animacao_personagem_Morrendo;
             maxAnimacao = max_animacao_morrendo;
@@ -303,14 +310,12 @@ var personagem = {
                     return;
                 }
                 this.animacao = 0; // reinicia
-                if (this.modo == "ataque1" || this.modo == "ataque2"){
-                    this.modo = "normal";
-                    this.acumuladorAnimacao = 0;
+                if (this.modo == "ataque1" || this.modo == "ataque2" || this.modo == "perdendo_vida"){
+                    this.trocarModo("normal");
                 }
                 if(this.modo == "ataque3") {
                     adicionarCoisa(new Flecha(this))
-                    this.modo = "normal";
-                    this.acumuladorAnimacao = 0;
+                    this.trocarModo("normal");
                 }
             }
         }
@@ -347,12 +352,18 @@ var personagem = {
         }
         this.vida -= quantidade_de_Dano;
         this.tempoDano = tempoMaximoDanoPersonagem;
+        this.trocarModo("perdendo_vida");
         console.log( "personagem: recebi dano. vida atual: " + this.vida)
 
         if(this.vida <= 0 ){
             console.log("personagem: morreu")
             this.vida = 0
         }
+    },
+    trocarModo(modo) {
+        this.modo = modo;
+        this.acumuladorAnimacao = 0;
+        this.animacao = 0;
     }
 };
 
