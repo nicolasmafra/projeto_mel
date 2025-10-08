@@ -309,14 +309,16 @@ var personagem = {
                     acabou = true;
                     return;
                 }
-                this.animacao = 0; // reinicia
                 if (this.modo == "ataque1" || this.modo == "ataque2" || this.modo == "perdendo_vida"){
                     this.trocarModo("normal");
+                    return;
                 }
                 if(this.modo == "ataque3") {
                     adicionarCoisa(new Flecha(this))
                     this.trocarModo("normal");
+                    return;
                 }
+                this.animacao = 0; // reinicia
             }
         }
     },

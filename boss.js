@@ -3,6 +3,7 @@ const tile_height_boss = 69;
 const max_animacao_bossVoando = 4;
 const max_animacao_bossAtacando = 8;
 const max_animacao_bossMorrendo = 7;
+const max_animacao_bossPerdendo = 4;
 const tamanho_real_boss = 25; // tamanho que o corpo ocupa sem as asas, em pixels
 const grades_do_boss = 3;
 const x_real_boss = 32;
@@ -10,6 +11,7 @@ const y_real_boss_parado = 55;
 const tempo_para_trocar_animacao_bossVoando = 0.2;
 const tempo_para_trocar_animacao_bossAtacando = 0.2;
 const tempo_para_trocar_animacao_bossMorrendo = 0.2;
+const tempo_para_trocar_animacao_bossPerdendo = 0.2;
 const velocidade_maxima_boss = 100;
 const velocidade_movimento_Boss = 5;
 const suavidade_boss = 0.08;
@@ -20,6 +22,7 @@ const velocidade_z_voando = 0.8;
 const velocidadeAtaqueZ = 2; // em 1/s
 const vidaMaximaBoss = 200;
 const tempo_minimo_ataque_boss = 2;
+const tempoMaximoDanoBoss = 1; // em segundos
 
 const imagemBossVoando = new Image();
 imagemBossVoando.src = 'assets/bossVoando.png';
@@ -29,6 +32,9 @@ imagemBossAtaque.src = 'assets/bossAtaque.png';
 
 const imagemBossMorrendo = new Image();
 imagemBossMorrendo.src = 'assets/bossMorrendo.png';
+
+const imagembossPerdendoVida = new Image();
+imagembossPerdendoVida.src = 'assets/bossPerdendoVida.png';
 
 var boss = {
     x: 400,
@@ -51,6 +57,7 @@ var boss = {
     raio: null,
     imagemInvertida: false,
     tempoAtaque: 0,
+    tempoDano: 0,
 
     configurar(grade) {
         this.grade = grade;
@@ -94,6 +101,9 @@ var boss = {
         if (this.modo == "atacando"){
             imagemASerDesenhada = imagemBossAtaque
         }
+        if (this.modo == "perdendo_vida"){
+            imagemASerDesenhada = imagembossPerdendoVida
+        }
         if (this.modo == "morre"){
             imagemASerDesenhada = imagemBossMorrendo
         }
@@ -126,10 +136,10 @@ var boss = {
             ctx.strokeRect(x, y, width * fracaoVida, height);
 
             ctx.font = "18px Arial";       
-            ctx.fillStyle = "#000000ff"
+            ctx.fillStyle = "#f3f73aff"
             ctx.textAlign = "center"; 
 
-            ctx.fillText("BOSS", x + width /2, y);
+            ctx.fillText("BOSS", x + width /2, y - height/3);
 
         } else if (this.imagemInvertida) {
             
@@ -177,13 +187,11 @@ var boss = {
     },
 
     atualizarModo(tempoQuePassou) {
-        if (this.modo == "morre" || this.modo == "morto") {
+        if (this.modo == "morre" || this.modo == "morto" || this.modo == "perdendo_vida") {
             return;
         }
         if (this.vida <= 0 && this.modo != "morre") {
-            this.modo = "morre"
-            this.acumuladorAnimacao = 0;
-            this.animacao = 0;
+            this.trocarModo("morre");
             return;
         }
 
@@ -192,9 +200,7 @@ var boss = {
         var distance = Math.sqrt(dx * dx + dy * dy);
 
         if(distance < 10 && this.modo != "atacando"){
-            this.modo = "atacando";
-            this.acumuladorAnimacao = 0;
-            this.animacao = 0;
+            this.trocarModo("atacando");
             this.tempoAtaque = 0;
             return;
         }
@@ -203,9 +209,7 @@ var boss = {
         }
         const distanceMaxima = distance_maxima*this.grade.tamanho;
         if(distance > distanceMaxima && this.modo != "voando" && this.tempoAtaque > tempo_minimo_ataque_boss){
-            this.modo = "voando"
-            this.acumuladorAnimacao = 0;
-            this.animacao = 0;
+            this.trocarModo("voando");
         }
     },
 
@@ -215,22 +219,29 @@ var boss = {
         }
         this.atualizarAnimacao(tempoQuePassou);
         this.verificarAtaque();
+        this.tempoDano -= tempoQuePassou;
+        if (this.tempoDano < 0) {
+            this.tempoDano = 0;
+        }
 
         this.atualizarModo(tempoQuePassou);
         if(this.modo == "voando"){
             this.aproximarBoss(tempoQuePassou);
         }
 
-        // voltar altura
-        var alturaFinal;
+        this.atualizarAltura(tempoQuePassou);
+    },
+
+    atualizarAltura(tempoQuePassou) {
+        if (this.modo != "voando" && this.modo != "atacando") {
+            return;
+        }
+        var alturaFinal = this.z;
         if (this.modo == "voando") {
             alturaFinal = altura_voando*this.grade.tamanho;
         }
         if (this.modo == "atacando") {
             alturaFinal = altura_atacando*this.grade.tamanho;
-        }
-        if (this.modo == "morre") {
-            alturaFinal = this.z;
         }
 
         var velocidadeZ = this.modo == "voando" ? velocidade_z_voando : velocidadeAtaqueZ;
@@ -251,6 +262,10 @@ var boss = {
             tempoParaTrocar = tempo_para_trocar_animacao_bossAtacando;
             maxAnimacao = max_animacao_bossAtacando;
         }
+        if (this.modo == "perdendo_vida"){
+            tempoParaTrocar = tempo_para_trocar_animacao_bossPerdendo;
+            maxAnimacao = max_animacao_bossPerdendo;
+        }
         if (this.modo == "morre"){
             tempoParaTrocar = tempo_para_trocar_animacao_bossMorrendo;
             maxAnimacao = max_animacao_bossMorrendo;
@@ -269,16 +284,16 @@ var boss = {
                     acabou = true;
                     return;
                 }
+                if(this.modo == "perdendo_vida") {
+                    this.trocarModo("voando");
+                    return;
+                }
                 this.animacao = 0; // reinicia
             }
         }
     },
     
     verificarAtaque() {
-        
-        if (this.atacou || !colidiu(boss, personagem)) {
-            return;
-        }
         if(this.modo == "atacando") {
             this.atacou || colidiu (boss, personagem) == true
             personagem.receberDano(40)
@@ -286,18 +301,29 @@ var boss = {
     },
 
     receberDano(quantidade_de_Dano) {
+        if (this.tempoDano > 0) {
+            return; // já está recebendo dano
+        }
         if(this.vida <= 0){
             console.log( "boss ja esta morto")
             return;
         }
 
         this.vida -= quantidade_de_Dano;
+        this.tempoDano = tempoMaximoDanoBoss;
+        this.trocarModo("perdendo_vida");
         console.log( "recebi dano. vida atual: " + this.vida)
 
         if(this.vida <= 0 ){
             console.log("morreu")
             this.vida = 0
         }
+    },
+
+    trocarModo(modo) {
+        this.modo = modo;
+        this.acumuladorAnimacao = 0;
+        this.animacao = 0;
     }
 }
 
