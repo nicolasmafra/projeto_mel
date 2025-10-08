@@ -23,6 +23,7 @@ const velocidadeAtaqueZ = 2; // em 1/s
 const vidaMaximaBoss = 200;
 const tempo_minimo_ataque_boss = 2;
 const tempoMaximoDanoBoss = 1; // em segundos
+const tempoEsperaDeAtaque = 1; // em segundos
 
 const imagemBossVoando = new Image();
 imagemBossVoando.src = 'assets/bossVoando.png';
@@ -294,6 +295,10 @@ var boss = {
     },
     
     verificarAtaque() {
+           
+        if (this.atacou || !colidiu(boss, personagem)) {
+            return;
+        }
         if(this.modo == "atacando") {
             this.atacou || colidiu (boss, personagem) == true
             personagem.receberDano(40)
