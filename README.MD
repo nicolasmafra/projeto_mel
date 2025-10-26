@@ -1,3 +1,3 @@
 # Projeto Mel
 
-Um projeto em que minha irmã aprende programação.
+Um projeto em que ensino programação para minha irmã Melissa.
